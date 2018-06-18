@@ -3,15 +3,26 @@ from tweepy import OAuthHandler
 
 from tweepy import Stream
 from tweepy.streaming import StreamListener
+import time
 
 
 class MyListener(StreamListener):
+    def __init__(self, time_limit=60):
+        self.start_time = time.time()
+        self.limit = time_limit
+        self.saveFile = open('fifaworldcup.json', 'a')
+        super(MyListener, self).__init__()
 
     def on_data(self, data):
         try:
-            with open('python.json', 'a') as f:
-                f.write(data)
+            if (time.time() - self.start_time) < self.limit:
+                self.saveFile.write(data)
+                self.saveFile.write('\n')
                 return True
+            else:
+                self.saveFile.close()
+                return False
+
         except BaseException as e:
             print("Error on_data: %s" % str(e))
         return True
@@ -32,7 +43,5 @@ api = tweepy.API(auth)
 
 
 
-
-
-twitter_stream = Stream(auth, MyListener())
-twitter_stream.filter(track=['#python'])
+myStream = tweepy.Stream(auth=api.auth, listener=MyListener(time_limit=30))
+myStream.filter(track=['#fifaworldcup'])

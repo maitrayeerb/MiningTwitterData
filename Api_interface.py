@@ -1,5 +1,6 @@
 import tweepy
 from tweepy import OAuthHandler
+import codecs, json
 
 consumer_key = 'YOUR-CONSUMER-KEY'
 consumer_secret = 'YOUR-CONSUMER-SECRET'
@@ -13,7 +14,11 @@ api = tweepy.API(auth)
 
 
 def process_or_store(tweet):
-    print(json.dumps(tweet))
+    with codecs.open('test.json', 'w', 'utf8') as f:
+        f.write(json.dumps(tweet, sort_keys=True, ensure_ascii=False))
+
+        #    with open('no.txt', 'w') as txtfile:
+        #json.dump(tweet, txtfile)
 
 ## read our own timeline
 for status in tweepy.Cursor(api.home_timeline).items(10):
