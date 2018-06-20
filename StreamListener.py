@@ -10,14 +10,14 @@ class MyListener(StreamListener):
     def __init__(self, time_limit=60):
         self.start_time = time.time()
         self.limit = time_limit
-        self.saveFile = open('fifaworldcup.json', 'a')
+        self.saveFile = open('GerVsMex.json', 'a')
         super(MyListener, self).__init__()
 
     def on_data(self, data):
         try:
             if (time.time() - self.start_time) < self.limit:
                 self.saveFile.write(data)
-                self.saveFile.write('\n')
+#                self.saveFile.write('\n')
                 return True
             else:
                 self.saveFile.close()
@@ -44,4 +44,4 @@ api = tweepy.API(auth)
 
 
 myStream = tweepy.Stream(auth=api.auth, listener=MyListener(time_limit=30))
-myStream.filter(track=['#fifaworldcup'])
+myStream.filter(track=['#GerMex'])
